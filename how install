@@ -1,0 +1,86 @@
+Doc1#---------------------------------------------------------------------------
+Dockefile to build Docker Image of Apache WebServer running on Ubuntu
+Made by
+
+#---------------------------------------------------------------------------
+
+FROM ubuntu:16.04
+
+RUN apt-get -y update RUN apt-get -y install apache2
+
+RUN echo 'Hello World from Docker!' > /var/www/html/index.html
+
+CMD ["/usr/sbin/apache2ctl", "-D","FOREGROUND"] EXPOSE 80
+
+FROM amazonlinux
+
+RUN yum -y update RUN yum -y install httpd
+
+RUN echo 'Hello World from Docker!' > /var/www/html/index.html CMD ["/usr/sbin/httpd","-D","FOREGROUND"]
+
+EXPOSE 80
+
+#-------------------------------------------------------------------------------------------------------------------------------- Install Docker on Ubuntu 18.04
+
+sudo apt update
+sudo apt install apt-transport-https
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -                                     (skachuem kluchuk i dobavljaem v nash ripo)
+sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"    (xochem skachuvaty tilku stabilni versii)
+sudo apt update                            (obnovut repositori list)
+
+sudo apt install docker-ce                 (instaluem docker engin ;))
+sudo systemctl status docker               (docker bejut u nas )  
+docker -v                                  (pokaje versiy dockera)
+sudo usermod -aG docker $USER              (dobavljaem usera v docker) shob ne vvodutu zavjdu sudo 
+>>>logout/login<<<                         (treba zrobutu logout/login exit vuidem z servera zaydem cheraz)
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-------------------------------------------------------------------------------------------------
+
+docker  ps        (list containers)  maki bejut
+docker  ps -a     (list all containers) pokazue jaki konteyneru bejalu
+docker images
+docker rm         (delete container) spochatku duality konteyner potim image                 
+docker rmi        (delete image)
+       rmi -f     (jaksho zadaem pary images) force udaljae vse 
+docker tag ivan:v1 ivan:v2         (sozdaetsja copija image takogo samogo)
+
+docker search tomcat                 (shukaem imaje) 
+docker pull tomcat                   (skachuem imaje ) z internets vin skachue z doker hub
+docker run -it -p 1234:8080 tomcat   (zrobum konteyner z etogo image, provirem ipadres ifconfig  it-interuktivno, -p delaem pereadresaciy portiv xochem abu zapuskalos na porti 1234 )
+docker run -d -p 1234:8080 tomcat    (vudast nam id konteynera i vin bude bijaty na bakendi zavjdy) robum pereadresaciy portiv z 8080 na 1234 
+docker run -d -p 1235:8080 tomcat    ( mojna che to same zrobuty cherez port 1235 ) 
+docker search nginx 
+docker run -it -p 8888:80 nginx      
+docker run -d -p 1236:80 nginx     (mojna ne robuty pull a zrazu zapuskaty vin sam sobi skachae z nety )
+
+   (zrobum nash docker file, sozdamo durektoriy mkdir mydocker i tam sozdamo file Dockerfile textovum redaktorom zapushem skruptyk)
+nano Dockerfile       (i tam vstavljaem sviy cod ) i z cjogo Dockerfile sozdamo nash image
+                            
+docker build -t ivan:v1 .        ( z cego Dockerfile treba sozdaty docker imaje, nezabuvaem krapky v kinci, v1- dobavljaem Tag nazvem file ivan)
+docker image                      
+docker run -it  -p 1234:80  ivan:v1  (dvi tochku to tag dobavljaem versia 1)()
+docker run -d -p  1111:80  ivan:v1  (zapustem miy web site z mogo image) (zapustylu docker konteyner z mogo image )
+(zapuskaem vsegda z tagom image, mojna pominjaty tag abo skopiyuvaty)
+docker tag ivan:v1 ivan:copy (zrobulu kopiyu)
+                   
+
+UPDATE IMAGE    LOGIN IN CONTEYNER      (i tam moj pominjaty svoy storinky or v Dockerfile toje moj minjaty vsiy cod) 
+~~~~~~~~~~~~~
+docker run -d -p 7777:80 denis_ubuntu4
+docker exec -it (konteyner ID) /bin/bash          (zaydem na sviy konteyner) v /var/www/html mojem izminuty web storinnky)skachaem nano abo (echo "Versionoooooo2" >> index.html)
+echo "V2" >> /var/www/html/index.html     (dobavulu V2 do nashogo sayta)
+exit
+docker commit 5267e21d140 ivan:v2           (zrobum novuy imagez obnovlonny versiy, prosto dobavljaem tag)       
+docker run -d -p 1237:80 ivan:v2            (miy konteyner z obnovlennum imegom)
+Export/Import Docker Image to file
+
+docker save image:tag > arch_name.tar docker load -i arch_name.tar
+
+Import/Export Docker Image to AWS ECR (ZAKUDYEM REPOZITORI V DOCKER HUB) OR V ELACTIC CONTAINER REPOSITORY
+
+docker build -t denis:v1 .
+aws ecr get-login --no-include-email --region=ca-central-1 
+docker tag  denis:v1  12345678.dkr.ecr.ca-central-1.amazonaws.com/myrepo:latest
+docker push 12345678.dkr.ecr.ca-central-1.amazonaws.com/myrepo:lastest
+
+docker pull 12345678.dkr.ecr.ca-central-1.amazonaws.com/myrepo:latest
