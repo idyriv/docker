@@ -1,25 +1,14 @@
 Doc1#---------------------------------------------------------------------------
 Dockefile to build Docker Image of Apache WebServer running on Ubuntu
-Made by
-
 #---------------------------------------------------------------------------
-
 FROM ubuntu:16.04
-
 RUN apt-get -y update RUN apt-get -y install apache2
-
 RUN echo 'Hello World from Docker!' > /var/www/html/index.html
-
 CMD ["/usr/sbin/apache2ctl", "-D","FOREGROUND"] EXPOSE 80
-
 FROM amazonlinux
-
 RUN yum -y update RUN yum -y install httpd
-
 RUN echo 'Hello World from Docker!' > /var/www/html/index.html CMD ["/usr/sbin/httpd","-D","FOREGROUND"]
-
 EXPOSE 80
-
 #-------------------------------------------------------------------------------------------------------------------------------- Install Docker on Ubuntu 18.04
 
 sudo apt update
@@ -27,7 +16,6 @@ sudo apt install apt-transport-https
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -                                     (skachuem kluchuk i dobavljaem v nash ripo)
 sudo add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable"    (xochem skachuvaty tilku stabilni versii)
 sudo apt update                            (obnovut repositori list)
-
 sudo apt install docker-ce                 (instaluem docker engin ;))
 sudo systemctl status docker               (docker bejut u nas )  
 docker -v                                  (pokaje versiy dockera)
@@ -78,9 +66,9 @@ docker save image:tag > arch_name.tar docker load -i arch_name.tar
 
 Import/Export Docker Image to AWS ECR (ZAKUDYEM REPOZITORI V DOCKER HUB) OR V ELACTIC CONTAINER REPOSITORY
 
-docker build -t denis:v1 .
+docker build -t ivan:v1 .
 aws ecr get-login --no-include-email --region=ca-central-1 
-docker tag  denis:v1  12345678.dkr.ecr.ca-central-1.amazonaws.com/myrepo:latest
+docker tag  ivan:v1  12345678.dkr.ecr.ca-central-1.amazonaws.com/myrepo:latest
 docker push 12345678.dkr.ecr.ca-central-1.amazonaws.com/myrepo:lastest
 
 docker pull 12345678.dkr.ecr.ca-central-1.amazonaws.com/myrepo:latest
