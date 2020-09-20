@@ -1,3 +1,5 @@
+
+
 Doc1#---------------------------------------------------------------------------
 Dockefile to build Docker Image of Apache WebServer running on Ubuntu
 #---------------------------------------------------------------------------
@@ -10,7 +12,9 @@ RUN yum -y update RUN yum -y install httpd
 RUN echo 'Hello World from Docker!' > /var/www/html/index.html CMD ["/usr/sbin/httpd","-D","FOREGROUND"]
 EXPOSE 80
 #-------------------------------------------------------------------------------------------------------------------------------- Install Docker on Ubuntu 18.04
-
+Install Docker Engine
+https://www.docker.com/    - Products - Container Runtime   (zaxodum i skachyem)
+https://hub.docker.com/    - tyt vsi images 
 sudo apt update
 sudo apt install apt-transport-https
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -                                     (skachuem kluchuk i dobavljaem v nash ripo)
@@ -20,36 +24,42 @@ sudo apt install docker-ce                 (instaluem docker engin ;))
 sudo systemctl status docker               (docker bejut u nas )  
 docker -v                                  (pokaje versiy dockera)
 sudo usermod -aG docker $USER              (dobavljaem usera v docker) shob ne vvodutu zavjdu sudo 
->>>logout/login<<<                         (treba zrobutu logout/login exit vuidem z servera zaydem cheraz)
-
+>>>logout/login<<<                         (zrobum logout/login na server)
+docker run hello-world                    --- zapustum image dlja testiv skachae z nety
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-------------------------------------------------------------------------------------------------
 
-docker  ps        (list containers)  maki bejut
-docker  ps -a     (list all containers) pokazue jaki konteyneru bejalu
+docker  ps        (list containers)  jaki bejut
+docker  ps -a     (list all containers) pokazue vsi jaki konteyneru bejalu
 docker images
-docker rm         (delete container) spochatku duality konteyner potim image                 
+docker rm (conteyner#)        (delete container) spochatku delete konteyner potim image                 
 docker rmi        (delete image)
        rmi -f     (jaksho zadaem pary images) force udaljae vse 
 docker tag ivan:v1 ivan:v2         (sozdaetsja copija image takogo samogo)
-
-docker search tomcat                 (shukaem imaje) 
+docker search tomcat                 (shukaem imaje, napruklad tomcat) 
 docker pull tomcat                   (skachuem imaje ) z internets vin skachue z doker hub
-docker run -it -p 1234:8080 tomcat   (zrobum konteyner z etogo image, provirem ipadres ifconfig  it-interuktivno, -p delaem pereadresaciy portiv xochem abu zapuskalos na porti 1234 )
-docker run -d -p 1234:8080 tomcat    (vudast nam id konteynera i vin bude bijaty na bakendi zavjdy) robum pereadresaciy portiv z 8080 na 1234 
+docker run -it -p 1234:8080 tomcat   (zrobum konteyner z etogo image, provirem ip address ifconfig  it-interuktivno,(comandny stroku ne vudast nam) -p delaem pereadresaciy portiv xochem abu zapuskalos na porti 1234 )
+docker run -d -p 1234:8080 tomcat    (zapystym shob zavjdy bejal vudast nam id konteynera i vin bude bijaty na bakendi zavjdy) robum pereadresaciy portiv z 8080 na 1234 
 docker run -d -p 1235:8080 tomcat    ( mojna che to same zrobuty cherez port 1235 ) 
 docker search nginx 
 docker run -it -p 8888:80 nginx      
 docker run -d -p 1236:80 nginx     (mojna ne robuty pull a zrazu zapuskaty vin sam sobi skachae z nety )
 
-   (zrobum nash docker file, sozdamo durektoriy mkdir mydocker i tam sozdamo file Dockerfile textovum redaktorom zapushem skruptyk)
-nano Dockerfile       (i tam vstavljaem sviy cod ) i z cjogo Dockerfile sozdamo nash image
-                            
+DOCKERFILE
+   (zrobum nash docker file, sozdamo durektoriy na serveri mkdir mydocker i tam sozdamo file Dockerfile, redaktorom zapushem skruptyk)
+nano Dockerfile       (i tam vstavljaem sviy cod ) i z cjogo Dockerfile sozdamo nash image                           
 docker build -t ivan:v1 .        ( z cego Dockerfile treba sozdaty docker imaje, nezabuvaem krapky v kinci, v1- dobavljaem Tag nazvem file ivan)
 docker image                      
 docker run -it  -p 1234:80  ivan:v1  (dvi tochku to tag dobavljaem versia 1)()
-docker run -d -p  1111:80  ivan:v1  (zapustem miy web site z mogo image) (zapustylu docker konteyner z mogo image )
-(zapuskaem vsegda z tagom image, mojna pominjaty tag abo skopiyuvaty)
+docker run -d -p  1111:80  ivan:v1  (zapustem miy web site z mogo image) (zapustylu docker konteyner z mogo image )(zapuskaem vsegda z tagom image, mojna pominjaty tag abo skopiyuvaty)
 docker tag ivan:v1 ivan:copy (zrobulu kopiyu)
+/#------dockerfile--------------------------pushem skrupt dlja image
+FROM amazonlinux        (or ubuntu:16.04 -nazva image jakogo ja vukorystovyu)
+RUN yum -y update
+RUN yum -y install httpd
+RUN echo 'Hello World from Docker!' > /var/www/html/index.html
+CMD ["/usr/sbin/httpd","-D","FOREGROUND"]      (zapusakaem na backgroundi)
+EXPOSE 80/                                     (i vidkruvaem port 80)
+
                    
 
 UPDATE IMAGE    LOGIN IN CONTEYNER      (i tam moj pominjaty svoy storinky or v Dockerfile toje moj minjaty vsiy cod) 
