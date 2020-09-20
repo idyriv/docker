@@ -1,18 +1,4 @@
-
-
-Doc1#---------------------------------------------------------------------------
-Dockefile to build Docker Image of Apache WebServer running on Ubuntu
-#---------------------------------------------------------------------------
-FROM ubuntu:16.04
-RUN apt-get -y update RUN apt-get -y install apache2
-RUN echo 'Hello World from Docker!' > /var/www/html/index.html
-CMD ["/usr/sbin/apache2ctl", "-D","FOREGROUND"] EXPOSE 80
-FROM amazonlinux
-RUN yum -y update RUN yum -y install httpd
-RUN echo 'Hello World from Docker!' > /var/www/html/index.html CMD ["/usr/sbin/httpd","-D","FOREGROUND"]
-EXPOSE 80
-#-------------------------------------------------------------------------------------------------------------------------------- Install Docker on Ubuntu 18.04
-Install Docker Engine
+Install Docker on Ubuntu 18.04
 https://www.docker.com/    - Products - Container Runtime   (zaxodum i skachyem)
 https://hub.docker.com/    - tyt vsi images 
 sudo apt update
@@ -34,7 +20,6 @@ docker images
 docker rm (conteyner#)        (delete container) spochatku delete konteyner potim image                 
 docker rmi        (delete image)
        rmi -f     (jaksho zadaem pary images) force udaljae vse 
-docker tag ivan:v1 ivan:v2         (sozdaetsja copija image takogo samogo)
 docker search tomcat                 (shukaem imaje, napruklad tomcat) 
 docker pull tomcat                   (skachuem imaje ) z internets vin skachue z doker hub
 docker run -it -p 1234:8080 tomcat   (zrobum konteyner z etogo image, provirem ip address ifconfig  it-interuktivno,(comandny stroku ne vudast nam) -p delaem pereadresaciy portiv xochem abu zapuskalos na porti 1234 )
@@ -43,6 +28,7 @@ docker run -d -p 1235:8080 tomcat    ( mojna che to same zrobuty cherez port 123
 docker search nginx 
 docker run -it -p 8888:80 nginx      
 docker run -d -p 1236:80 nginx     (mojna ne robuty pull a zrazu zapuskaty vin sam sobi skachae z nety )
+docker tag ivan:v1 ivan:copy       (tag mojna pominjaty zrobulu kopiyu)
 
 DOCKERFILE
    (zrobum nash docker file, sozdamo durektoriy na serveri mkdir mydocker i tam sozdamo file Dockerfile, redaktorom zapushem skruptyk)
@@ -50,35 +36,47 @@ nano Dockerfile       (i tam vstavljaem sviy cod ) i z cjogo Dockerfile sozdamo 
 docker build -t ivan:v1 .        ( z cego Dockerfile treba sozdaty docker imaje, nezabuvaem krapky v kinci (krapka localno), v1- dobavljaem Tag nazvem file ivan)
 docker image                     (zapustylu mini virtyalnu mashunky toist docker conteyner z mogo image (berem ip address servera 118.34.50.20:1111 i pokaje nashu storinky)
 docker run -it  -p 1236:80  ivan:v1  (dvi tochku to tag dobavljaem versia 1)(or)
-docker run -d -p  1111:80  ivan:v1  (zapustem miy web site z mogo image) (zapustylu docker konteyner z mogo image )(zapuskaem vsegda z tagom image, mojna pominjaty tag abo skopiyuvaty)
-docker tag ivan:v1 ivan:copy (zrobulu kopiyu)
-/#------dockerfile--------------------------pushem skrupt dlja image
-FROM amazonlinux        (or ubuntu:16.04 -nazva image jakogo ja vukorystovyu)
-RUN yum -y update
-RUN yum -y install httpd
+docker run -d -p  1111:80  ivan:v1  (zapustem miy web site z mogo image) (zapustylu docker konteyner z mogo image )(zapuskaem vsegda z tagom image, mojna pominjaty tag abo skopiyuvaty)                                  
+
+Dockefile to build Docker Image of Apache WebServer running on Ubuntu
+#---------------------------------------------------------------------------
+FROM ubuntu:16.04
+RUN apt-get -y update 
+RUN apt-get -y install apache2
 RUN echo 'Hello World from Docker!' > /var/www/html/index.html
-CMD ["/usr/sbin/httpd","-D","FOREGROUND"]      (zapusakaem na backgroundi)
-EXPOSE 80/                                     (i vidkruvaem port 80)    
+CMD ["/usr/sbin/apache2ctl", "-D","FOREGROUND"]
+EXPOSE 80
 
-                   
-
-UPDATE IMAGE    LOGIN IN CONTEYNER      (i tam moj pominjaty svoy storinky or v Dockerfile toje moj minjaty vsiy cod) 
-~~~~~~~~~~~~~
-docker run -d -p 7777:80 denis_ubuntu4
-docker exec -it (konteyner ID) /bin/bash          (zaydem na sviy konteyner) v /var/www/html mojem izminuty web storinnky)skachaem nano abo (echo "Versionoooooo2" >> index.html)
-echo "V2" >> /var/www/html/index.html     (dobavulu V2 do nashogo sayta)
+FROM amazonlinux                                        (-nazva image jakogo ja vukorystovyu)
+RUN yum -y update 
+RUN yum -y install httpd
+RUN echo 'Hello World from Docker!' > /var/www/html/index.html 
+CMD ["/usr/sbin/httpd","-D","FOREGROUND"]               (zapusakaem na backgroundi)
+EXPOSE 80                                               (i vidkruvaem port 80)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+LOGIN IN CONTEYNER     UPDATE IMAGE   (i tam moj pominjaty svoy storinky or v Dockerfile toje moj minjaty vsiy cod) 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+docker run -d -p 1237:80 ivan_linux20
+docker exec -it (konteyner ID) /bin/bash          (zaydem na sviy konteyner) v /var/www/html mojem izminuty web storinnky)skachaem nano abo (echo "Version2" >> index.html)
+echo "V2" >> /var/www/html/index.html             (dobavulu eto pridlojenie "V2" do nashogo sayta, zaydem gljanum na sayt 118.34.50.20:1237)
 exit
-docker commit 5267e21d140 ivan:v2           (zrobum novuy imagez obnovlonny versiy, prosto dobavljaem tag)       
-docker run -d -p 1237:80 ivan:v2            (miy konteyner z obnovlennum imegom)
-Export/Import Docker Image to file
-
-docker save image:tag > arch_name.tar docker load -i arch_name.tar
+docker commit 5267e21d140 ivan:v2           (CREATE NEW IMAGE update version, prosto dobavljaem tag, teper mojna zapuskaty conteyner z cego  novogo  image)       
+docker run -d -p 1237:80 ivan:v2            (miy konteyner z obnovlennum imegom, zaydem gljanum na sayt 118.34.50.20:1237)
 
 Import/Export Docker Image to AWS ECR (ZAKUDYEM REPOZITORI V DOCKER HUB) OR V ELACTIC CONTAINER REPOSITORY
-
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 docker build -t ivan:v1 .
 aws ecr get-login --no-include-email --region=ca-central-1 
 docker tag  ivan:v1  12345678.dkr.ecr.ca-central-1.amazonaws.com/myrepo:latest
 docker push 12345678.dkr.ecr.ca-central-1.amazonaws.com/myrepo:lastest
-
 docker pull 12345678.dkr.ecr.ca-central-1.amazonaws.com/myrepo:latest
+
+Export/Import Docker Image to file
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+docker save image:tag > arch_name.tar
+docker load -i arch_name.tar
+
+Kill and Delete Containers and Images
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+docker rm -f $(docker ps -aq)        # Delete all Containers
+docker rmi -f $(docker images -q)    # Delete all Images
