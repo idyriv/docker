@@ -47,9 +47,9 @@ docker run -d -p 1236:80 nginx     (mojna ne robuty pull a zrazu zapuskaty vin s
 DOCKERFILE
    (zrobum nash docker file, sozdamo durektoriy na serveri mkdir mydocker i tam sozdamo file Dockerfile, redaktorom zapushem skruptyk)
 nano Dockerfile       (i tam vstavljaem sviy cod ) i z cjogo Dockerfile sozdamo nash image                           
-docker build -t ivan:v1 .        ( z cego Dockerfile treba sozdaty docker imaje, nezabuvaem krapky v kinci, v1- dobavljaem Tag nazvem file ivan)
-docker image                      
-docker run -it  -p 1234:80  ivan:v1  (dvi tochku to tag dobavljaem versia 1)()
+docker build -t ivan:v1 .        ( z cego Dockerfile treba sozdaty docker imaje, nezabuvaem krapky v kinci (krapka localno), v1- dobavljaem Tag nazvem file ivan)
+docker image                     (zapustylu mini virtyalnu mashunky toist docker conteyner z mogo image (berem ip address servera 118.34.50.20:1111 i pokaje nashu storinky)
+docker run -it  -p 1236:80  ivan:v1  (dvi tochku to tag dobavljaem versia 1)(or)
 docker run -d -p  1111:80  ivan:v1  (zapustem miy web site z mogo image) (zapustylu docker konteyner z mogo image )(zapuskaem vsegda z tagom image, mojna pominjaty tag abo skopiyuvaty)
 docker tag ivan:v1 ivan:copy (zrobulu kopiyu)
 /#------dockerfile--------------------------pushem skrupt dlja image
@@ -58,7 +58,7 @@ RUN yum -y update
 RUN yum -y install httpd
 RUN echo 'Hello World from Docker!' > /var/www/html/index.html
 CMD ["/usr/sbin/httpd","-D","FOREGROUND"]      (zapusakaem na backgroundi)
-EXPOSE 80/                                     (i vidkruvaem port 80)
+EXPOSE 80/                                     (i vidkruvaem port 80)    
 
                    
 
